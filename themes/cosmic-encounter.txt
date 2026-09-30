@@ -1,0 +1,24 @@
+# Cosmic Encounter aliens
+VIRUS = alien that multiplies its ships by its card
+ORACLE = alien that makes its foe play first, face up
+ZOMBIE = alien whose ships never go to the warp
+CLONE = alien that keeps the card it played
+LOSER = alien that can make the lower total win
+AMOEBA = alien that oozes ships in or out
+MUTANT = alien that refills its hand to eight
+HEALER = alien that rescues others' ships from the warp
+TRADER = alien that swaps hands
+TRIPLER = alien that triples low cards
+WARRIOR = alien that toughens with every fight
+MIRROR = alien that reverses attack digits
+MISER = alien with a hoard of cards
+SHADOW = alien that assassinates ships
+MACHINE = alien that keeps having encounters
+VOID = alien that eradicates ships
+FILCH = alien that steals used cards
+FIDO = alien that fetches discarded cards
+HUMAN = alien that adds four to its total
+CHOSEN = alien blessed with divine intervention
+MIND = alien that reads your hand
+WARP = where lost ships wait
+FLARE = card that boosts an alien's power

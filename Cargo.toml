@@ -1,0 +1,12 @@
+[package]
+name = "ximenes"
+version = "0.1.0"
+edition = "2021"
+description = "Builds a themed 7x7 cryptic crossword from a seed, then explains every clue"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+miniz_oxide = "0.9.1"
+
+[profile.release]
+opt-level = 3

@@ -1,0 +1,114 @@
+# Cryptic-crossword abbreviations and short words usable as charade/container parts.
+# LETTERS<TAB>clue text|clue text...   A clue text equal to the letters themselves
+# (e.g. "at") means the part is used as-is in the surface.
+A	a|one|article
+B	book|black|born|bishop
+C	about|hundred|caught|cold
+D	died|daughter|penny
+E	east|energy|European
+F	female|fine|loud
+G	good|gram|grand
+H	hot|hospital|husband|hard
+I	one|island|I
+K	king|thousand
+L	left|learner|pound|lake|fifty
+M	male|married|thousand|metre
+N	north|new|name|knight
+O	ring|nothing|love|zero|duck
+P	quiet|page|parking|soft
+Q	question|queen
+R	right|river|run|king
+S	small|south|son|second
+T	time|tea|ton
+U	university|posh|you
+V	five|versus|very
+W	west|wife|with|women
+X	ten|kiss|times
+Y	yard|year
+AB	sailor
+AD	notice|advert
+AI	excellent|first-class
+AM	morning|am
+AN	an
+AS	as|like
+AT	at
+BA	graduate
+BE	be|exist|live
+BY	by|beside
+CA	about
+CE	church
+CH	church
+CO	company
+DI	detective
+DO	party|do
+DR	doctor
+ED	editor
+EG	say|for example
+EL	railway|the Spanish
+ER	hesitation|queen
+ET	alien
+GI	soldier
+GO	go|turn|attempt
+HA	laugh
+HE	he|man
+HI	hello|hi
+IE	that is
+IF	if|provided
+IN	in|at home|fashionable
+IS	is
+IT	it|sex appeal
+LA	note|Los Angeles
+LB	pound
+LE	the French
+LO	look|behold
+LT	lieutenant
+MA	mother|degree
+ME	me|note
+MI	note
+MO	moment|doctor
+MP	politician|member
+MS	manuscript
+MY	my|gosh
+NB	note well
+NE	north-east
+NO	no|number|refusal
+OF	of
+OK	fine|all right
+ON	on|working|leg
+OP	work|operation
+OR	or|gold|men
+OS	bone|outsize
+OX	ox|bull
+PA	father|dad
+PC	constable|officer
+PE	exercise
+PI	pious|holy
+PM	afternoon|leader
+PO	river
+PT	point|exercise
+RA	artist|gunners
+RD	road
+RE	about|on|concerning
+RN	navy|sailors
+SA	sex appeal
+SE	south-east
+SO	so|thus|therefore
+ST	street|saint|way
+SW	south-west
+TA	thanks|volunteers
+TE	note
+TI	note
+TO	to|towards
+TT	dry|teetotal
+UN	one in Paris|a French
+UP	up|awake|riding
+US	us|American
+WE	we
+YE	you once
+GEN	information|intelligence
+PER	each|a
+REP	salesman|agent
+SEC	moment|dry
+TAR	sailor|pitch
+TEC	detective
+VET	check|examine

@@ -1,0 +1,21 @@
+# Operation Market Garden
+ARNHEM = town whose bridge was a bridge too far
+FROST = colonel who held the Arnhem bridge
+GAVIN = general who led the 82nd Airborne
+MODEL = German field marshal surprised at Oosterbeek
+GRAVE = town whose Maas bridge was taken intact
+WAAL = river crossed at Nijmegen in canvas boats
+RHINE = river the whole plan meant to cross
+MAAS = river bridged at Grave
+HORSA = wooden British glider
+DAKOTA = transport plane that dropped the paras
+GLIDER = unpowered troop carrier
+POLISH = like Sosabowski's brigade
+GUARDS = armoured division leading XXX Corps north
+VEGHEL = town on Hell's Highway held by the 101st
+SON = town whose canal bridge was blown
+MONTY = the operation's planner, informally
+PARAS = red berets, briefly
+FLAK = anti-aircraft fire
+HIGHWAY = Hell's road north
+BRIDGE = objective at Arnhem

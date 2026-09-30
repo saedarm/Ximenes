@@ -1,0 +1,18 @@
+# Dayton landmarks
+WRIGHT = brothers who built flyers in a Dayton bike shop
+HUFFMAN = prairie where the Wrights learned to fly
+OREGON = historic district of bars and brick streets
+ARCADE = restored downtown hall with a glass rotunda
+DUNBAR = poet whose house is a Dayton landmark
+DELCO = Kettering's firm, founded in Dayton
+NCR = cash register giant born in Dayton
+DRAGONS = minor league team downtown
+FLYERS = University of Dayton team
+ARENA = UD venue of the First Four
+DEEDS = Carillon Park's bell tower namesake
+MIAMI = great river through downtown
+GEM = kind of city Dayton is
+FLYER = Wright machine on show at Carillon Park
+MORAINE = suburb named for a glacial ridge
+OAKWOOD = leafy suburb home to Hawthorn Hill
+MUSEUM = Air Force attraction at Wright-Patt
