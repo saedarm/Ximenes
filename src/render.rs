@@ -46,13 +46,21 @@ pub fn text(p: &Puzzle, reveal: bool) -> String {
         for across in [true, false] {
             for c in p.sorted(across) {
                 let star = if c.theme { " *theme" } else { "" };
-                s += &format!("{:>2}{}  {}{}\n     {}\n", c.number, if across { "a" } else { "d" }, c.answer, star, c.explain);
+                s += &format!(
+                    "{:>2}{}  {}{}\n     {}\n",
+                    c.number,
+                    if across { "a" } else { "d" },
+                    c.answer,
+                    star,
+                    c.explain
+                );
             }
         }
     }
     s
 }
 
+#[allow(clippy::needless_range_loop)] // (row, col) indexing reads clearer for a grid
 fn text_grid(p: &Puzzle, letters: bool) -> String {
     let nums = p.numbers();
     let rule = format!("+{}\n", "---+".repeat(N));
@@ -65,8 +73,16 @@ fn text_grid(p: &Puzzle, letters: bool) -> String {
                 top += "###|";
                 mid += "###|";
             } else {
-                top += &if nums[r][c] > 0 { format!("{:<3}|", nums[r][c]) } else { "   |".into() };
-                mid += &if letters { format!(" {} |", p.fill.letters[r][c] as char) } else { "   |".into() };
+                top += &if nums[r][c] > 0 {
+                    format!("{:<3}|", nums[r][c])
+                } else {
+                    "   |".into()
+                };
+                mid += &if letters {
+                    format!(" {} |", p.fill.letters[r][c] as char)
+                } else {
+                    "   |".into()
+                };
             }
         }
         s += &format!("{top}\n{mid}\n{rule}");
@@ -101,7 +117,11 @@ fn wrap(s: &str, size: f64, max: f64) -> Vec<String> {
     let mut lines = Vec::new();
     let mut cur = String::new();
     for word in s.split_whitespace() {
-        let trial = if cur.is_empty() { word.to_string() } else { format!("{cur} {word}") };
+        let trial = if cur.is_empty() {
+            word.to_string()
+        } else {
+            format!("{cur} {word}")
+        };
         if width(&trial, size, false) > max && !cur.is_empty() {
             lines.push(std::mem::take(&mut cur));
             cur = word.to_string();
@@ -119,8 +139,22 @@ fn wrap(s: &str, size: f64, max: f64) -> Vec<String> {
 
 /// A drawing op in a y-down coordinate space; both backends replay these.
 enum Op {
-    Rect { x: f64, y: f64, w: f64, h: f64, fill: bool, stroke: f64 },
-    Text { x: f64, y: f64, size: f64, bold: bool, italic: bool, s: String },
+    Rect {
+        x: f64,
+        y: f64,
+        w: f64,
+        h: f64,
+        fill: bool,
+        stroke: f64,
+    },
+    Text {
+        x: f64,
+        y: f64,
+        size: f64,
+        bold: bool,
+        italic: bool,
+        s: String,
+    },
 }
 
 struct Page {
@@ -131,28 +165,57 @@ const PAGE_W: f64 = 612.0;
 const PAGE_H: f64 = 792.0;
 const MARGIN: f64 = 54.0;
 
+#[allow(clippy::needless_range_loop)]
 fn draw_grid(ops: &mut Vec<Op>, p: &Puzzle, x0: f64, y0: f64, cell: f64, letters: bool) {
     let nums = p.numbers();
     for r in 0..N {
         for c in 0..N {
             let (x, y) = (x0 + c as f64 * cell, y0 + r as f64 * cell);
             let block = p.fill.blocks[r][c];
-            ops.push(Op::Rect { x, y, w: cell, h: cell, fill: block, stroke: 0.6 });
+            ops.push(Op::Rect {
+                x,
+                y,
+                w: cell,
+                h: cell,
+                fill: block,
+                stroke: 0.6,
+            });
             if block {
                 continue;
             }
             if nums[r][c] > 0 {
-                ops.push(Op::Text { x: x + 2.0, y: y + cell * 0.28, size: cell * 0.27, bold: false, italic: false, s: nums[r][c].to_string() });
+                ops.push(Op::Text {
+                    x: x + 2.0,
+                    y: y + cell * 0.28,
+                    size: cell * 0.27,
+                    bold: false,
+                    italic: false,
+                    s: nums[r][c].to_string(),
+                });
             }
             if letters {
                 let ch = (p.fill.letters[r][c] as char).to_string();
                 let size = cell * 0.55;
-                ops.push(Op::Text { x: x + (cell - width(&ch, size, true)) / 2.0, y: y + cell * 0.82, size, bold: true, italic: false, s: ch });
+                ops.push(Op::Text {
+                    x: x + (cell - width(&ch, size, true)) / 2.0,
+                    y: y + cell * 0.82,
+                    size,
+                    bold: true,
+                    italic: false,
+                    s: ch,
+                });
             }
         }
     }
     let side = cell * N as f64;
-    ops.push(Op::Rect { x: x0, y: y0, w: side, h: side, fill: false, stroke: 1.6 });
+    ops.push(Op::Rect {
+        x: x0,
+        y: y0,
+        w: side,
+        h: side,
+        fill: false,
+        stroke: 1.6,
+    });
 }
 
 /// Flows text blocks into a column, breaking pages as needed.
@@ -186,7 +249,14 @@ impl Flow {
         self.need(30.0);
         self.y += 18.0;
         let (x, y) = (self.x, self.y);
-        self.page().push(Op::Text { x, y, size: 12.0, bold: true, italic: false, s: s.into() });
+        self.page().push(Op::Text {
+            x,
+            y,
+            size: 12.0,
+            bold: true,
+            italic: false,
+            s: s.into(),
+        });
         self.y += 8.0;
     }
 
@@ -204,41 +274,146 @@ impl Flow {
             self.y += lead;
             let y = self.y;
             if i == 0 && !label.is_empty() {
-                self.page().push(Op::Text { x, y, size, bold: true, italic: false, s: label.into() });
+                self.page().push(Op::Text {
+                    x,
+                    y,
+                    size,
+                    bold: true,
+                    italic: false,
+                    s: label.into(),
+                });
             }
-            self.page().push(Op::Text { x: x + gutter, y, size, bold: false, italic: false, s: line.clone() });
+            self.page().push(Op::Text {
+                x: x + gutter,
+                y,
+                size,
+                bold: false,
+                italic: false,
+                s: line.clone(),
+            });
         }
         self.y += 4.0;
     }
 }
 
-fn new_page(footer: &str) -> Page {
-    Page {
-        ops: vec![Op::Text { x: MARGIN, y: PAGE_H - 30.0, size: 8.0, bold: false, italic: true, s: footer.into() }],
+/// Like `wrap`, but also breaks a single word that is wider than the line.
+/// Share codes for custom themes are one long unbroken word of ~300 chars.
+fn hard_wrap(s: &str, size: f64, max: f64) -> Vec<String> {
+    let mut lines = Vec::new();
+    let mut cur = String::new();
+    for word in s.split_whitespace() {
+        let sep = if cur.is_empty() { "" } else { " " };
+        if width(&format!("{cur}{sep}{word}"), size, false) <= max {
+            cur = format!("{cur}{sep}{word}");
+            continue;
+        }
+        if !cur.is_empty() && width(word, size, false) <= max {
+            lines.push(std::mem::take(&mut cur));
+            cur = word.to_string();
+            continue;
+        }
+        // too long for any line: fill character by character
+        if !cur.is_empty() {
+            cur.push(' ');
+        }
+        for ch in word.chars() {
+            cur.push(ch);
+            if width(&cur, size, false) > max {
+                cur.pop();
+                lines.push(std::mem::take(&mut cur));
+                cur.push(ch);
+            }
+        }
     }
+    if !cur.is_empty() {
+        lines.push(cur);
+    }
+    lines
+}
+
+/// The footer sits below the bottom margin. Long share codes wrap onto
+/// extra lines, and the type shrinks if needed so it never runs off the page.
+fn new_page(footer: &str) -> Page {
+    let max = PAGE_W - 2.0 * MARGIN;
+    let mut size = 8.0;
+    let mut lines = hard_wrap(footer, size, max);
+    while lines.len() > 4 && size > 5.0 {
+        size -= 0.5;
+        lines = hard_wrap(footer, size, max);
+    }
+    let top = PAGE_H - MARGIN + 14.0;
+    let ops = lines
+        .into_iter()
+        .enumerate()
+        .map(|(i, s)| Op::Text {
+            x: MARGIN,
+            y: top + i as f64 * size * 1.2,
+            size,
+            bold: false,
+            italic: true,
+            s,
+        })
+        .collect();
+    Page { ops }
 }
 
 fn layout(p: &Puzzle, answers: bool) -> Vec<Page> {
-    let footer = format!("Ximenes  \u{2022}  regenerate with: ximenes open {}", p.code);
+    let footer = format!(
+        "Ximenes  \u{2022}  regenerate with: ximenes open {}",
+        p.code
+    );
     let mut first = new_page(&footer);
-    first.ops.push(Op::Text { x: MARGIN, y: MARGIN + 6.0, size: 20.0, bold: true, italic: false, s: p.title.clone() });
-    first.ops.push(Op::Text { x: MARGIN, y: MARGIN + 22.0, size: 9.0, bold: false, italic: true, s: "A 7x7 cryptic crossword".into() });
+    first.ops.push(Op::Text {
+        x: MARGIN,
+        y: MARGIN + 6.0,
+        size: 20.0,
+        bold: true,
+        italic: false,
+        s: p.title.clone(),
+    });
+    first.ops.push(Op::Text {
+        x: MARGIN,
+        y: MARGIN + 22.0,
+        size: 9.0,
+        bold: false,
+        italic: true,
+        s: "A 7x7 cryptic crossword".into(),
+    });
     let cell = 30.0;
     let top = MARGIN + 40.0;
     draw_grid(&mut first.ops, p, MARGIN, top, cell, false);
 
     let col_x = MARGIN + cell * N as f64 + 28.0;
-    let mut flow = Flow { pages: vec![first], x: col_x, w: PAGE_W - MARGIN - col_x, y: top - 18.0, footer: footer.clone(), widen_below: f64::INFINITY };
+    let mut flow = Flow {
+        pages: vec![first],
+        x: col_x,
+        w: PAGE_W - MARGIN - col_x,
+        y: top - 18.0,
+        footer: footer.clone(),
+        widen_below: f64::INFINITY,
+    };
     for across in [true, false] {
         flow.heading(if across { "Across" } else { "Down" });
         for c in p.sorted(across) {
-            flow.item(&c.number.to_string(), &format!("{} {}", c.text, c.enumeration), 10.5, 20.0);
+            flow.item(
+                &c.number.to_string(),
+                &format!("{} {}", c.text, c.enumeration),
+                10.5,
+                20.0,
+            );
         }
     }
 
     if answers {
         let mut sol = new_page(&footer);
-        sol.ops.push(Op::Text { x: MARGIN, y: MARGIN + 6.0, size: 16.0, bold: true, italic: false, s: format!("Solution \u{2014} {}", p.title) });
+        sol.ops.push(Op::Text {
+            x: MARGIN,
+            y: MARGIN + 6.0,
+            size: 16.0,
+            bold: true,
+            italic: false,
+            s: format!("Solution \u{2014} {}", p.title),
+        });
         let cell = 20.0;
         draw_grid(&mut sol.ops, p, MARGIN, MARGIN + 24.0, cell, true);
         flow.pages.push(sol);
@@ -250,7 +425,12 @@ fn layout(p: &Puzzle, answers: bool) -> Vec<Page> {
             flow.heading(if across { "Across" } else { "Down" });
             for c in p.sorted(across) {
                 let theme = if c.theme { "  [theme]" } else { "" };
-                flow.item(&format!("{}{}", c.number, if across { "a" } else { "d" }), &format!("{}{theme} \u{2014} {}", c.answer, c.explain), 9.0, 22.0);
+                flow.item(
+                    &format!("{}{}", c.number, if across { "a" } else { "d" }),
+                    &format!("{}{theme} \u{2014} {}", c.answer, c.explain),
+                    9.0,
+                    22.0,
+                );
             }
         }
     }
@@ -260,7 +440,9 @@ fn layout(p: &Puzzle, answers: bool) -> Vec<Page> {
 // ---------------------------------------------------------------- SVG
 
 fn xml(s: &str) -> String {
-    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
 }
 
 pub fn svg(p: &Puzzle, answers: bool) -> String {
@@ -272,23 +454,43 @@ pub fn svg(p: &Puzzle, answers: bool) -> String {
     for (i, page) in pages.iter().enumerate() {
         let dy = i as f64 * PAGE_H;
         if i > 0 {
-            s += &format!("<line x1=\"0\" y1=\"{dy}\" x2=\"{PAGE_W}\" y2=\"{dy}\" stroke=\"#bbb\" stroke-dasharray=\"4 4\"/>\n");
+            s += &format!(
+                "<line x1=\"0\" y1=\"{dy}\" x2=\"{PAGE_W}\" y2=\"{dy}\" stroke=\"#bbb\" stroke-dasharray=\"4 4\"/>\n"
+            );
         }
         for op in &page.ops {
             match op {
-                Op::Rect { x, y, w, h, fill, stroke } => {
+                Op::Rect {
+                    x,
+                    y,
+                    w,
+                    h,
+                    fill,
+                    stroke,
+                } => {
                     s += &format!(
                         "<rect x=\"{x:.1}\" y=\"{:.1}\" width=\"{w:.1}\" height=\"{h:.1}\" fill=\"{}\" stroke=\"#000\" stroke-width=\"{stroke}\"/>\n",
                         y + dy,
                         if *fill { "#000" } else { "none" }
                     )
                 }
-                Op::Text { x, y, size, bold, italic, s: t } => {
+                Op::Text {
+                    x,
+                    y,
+                    size,
+                    bold,
+                    italic,
+                    s: t,
+                } => {
                     s += &format!(
                         "<text x=\"{x:.1}\" y=\"{:.1}\" font-size=\"{size:.1}\"{}{}>{}</text>\n",
                         y + dy,
                         if *bold { " font-weight=\"bold\"" } else { "" },
-                        if *italic { " font-style=\"italic\" fill=\"#555\"" } else { "" },
+                        if *italic {
+                            " font-style=\"italic\" fill=\"#555\""
+                        } else {
+                            ""
+                        },
                         xml(t)
                     )
                 }
@@ -333,23 +535,53 @@ pub fn pdf(p: &Puzzle) -> Vec<u8> {
     objs.push(b"<< /Type /Catalog /Pages 2 0 R >>".to_vec());
     objs.push(format!("<< /Type /Pages /Kids [{}] /Count {n} >>", kids.join(" ")).into_bytes());
     for font in ["Helvetica", "Helvetica-Bold", "Helvetica-Oblique"] {
-        objs.push(format!("<< /Type /Font /Subtype /Type1 /BaseFont /{font} /Encoding /WinAnsiEncoding >>").into_bytes());
+        objs.push(
+            format!(
+                "<< /Type /Font /Subtype /Type1 /BaseFont /{font} /Encoding /WinAnsiEncoding >>"
+            )
+            .into_bytes(),
+        );
     }
     for (i, page) in pages.iter().enumerate() {
         let mut c: Vec<u8> = Vec::new();
         for op in &page.ops {
             match op {
-                Op::Rect { x, y, w, h, fill, stroke } => {
+                Op::Rect {
+                    x,
+                    y,
+                    w,
+                    h,
+                    fill,
+                    stroke,
+                } => {
                     let py = PAGE_H - y - h;
                     if *fill {
                         c.extend(format!("0 g {x:.2} {py:.2} {w:.2} {h:.2} re f\n").as_bytes());
                     }
-                    c.extend(format!("{stroke} w 0 G {x:.2} {py:.2} {w:.2} {h:.2} re S\n").as_bytes());
+                    c.extend(
+                        format!("{stroke} w 0 G {x:.2} {py:.2} {w:.2} {h:.2} re S\n").as_bytes(),
+                    );
                 }
-                Op::Text { x, y, size, bold, italic, s } => {
-                    let f = if *bold { "F2" } else if *italic { "F3" } else { "F1" };
+                Op::Text {
+                    x,
+                    y,
+                    size,
+                    bold,
+                    italic,
+                    s,
+                } => {
+                    let f = if *bold {
+                        "F2"
+                    } else if *italic {
+                        "F3"
+                    } else {
+                        "F1"
+                    };
                     let gray = if *italic { "0.35 g" } else { "0 g" };
-                    c.extend(format!("{gray} BT /{f} {size:.2} Tf {x:.2} {:.2} Td ", PAGE_H - y).as_bytes());
+                    c.extend(
+                        format!("{gray} BT /{f} {size:.2} Tf {x:.2} {:.2} Td ", PAGE_H - y)
+                            .as_bytes(),
+                    );
                     c.extend(pdf_str(s));
                     c.extend(b" Tj ET\n");
                 }
@@ -381,6 +613,12 @@ pub fn pdf(p: &Puzzle) -> Vec<u8> {
     for off in offsets {
         out.extend(format!("{off:010} 00000 n \n").as_bytes());
     }
-    out.extend(format!("trailer\n<< /Size {} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n", objs.len() + 1).as_bytes());
+    out.extend(
+        format!(
+            "trailer\n<< /Size {} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n",
+            objs.len() + 1
+        )
+        .as_bytes(),
+    );
     out
 }

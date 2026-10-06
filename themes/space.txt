@@ -1,0 +1,18 @@
+# Outer Space
+ORBIT = path round a planet
+COMET = icy visitor with a tail
+METEOR = shooting star
+PLANET = world circling a sun
+SATURN = ringed giant
+MARS = red planet
+VENUS = morning star
+NEBULA = cloud of interstellar gas
+GALAXY = star system
+ROCKET = launch vehicle
+LUNAR = of the moon
+STAR = sun, perhaps
+COSMOS = universe
+ECLIPSE = blackout in the sky
+ALIEN = visitor from afar
+CRATER = moon hollow
+MOON = night light

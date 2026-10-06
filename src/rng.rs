@@ -38,6 +38,11 @@ impl Rng {
         &xs[self.below(xs.len())]
     }
 
+    /// `pick` for a list of string literals, handing back the `&str` itself.
+    pub fn pick_str(&mut self, xs: &[&'static str]) -> &'static str {
+        xs[self.below(xs.len())] // same draw as `pick`, so output doesn't change
+    }
+
     /// Picks index i with probability proportional to weights[i].
     pub fn weighted(&mut self, weights: &[f64]) -> usize {
         let total: f64 = weights.iter().sum();

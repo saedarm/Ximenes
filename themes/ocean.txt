@@ -1,0 +1,18 @@
+# Under the Sea
+WAVE = breaker
+TIDE = it comes in and goes out
+CORAL = reef builder
+SHARK = predator with fins
+WHALE = huge mammal of the deep
+OYSTER = pearl maker
+REEF = underwater ridge
+KELP = seaweed
+LAGOON = shallow coastal pool
+HARBOR = safe haven for ships
+ANCHOR = it keeps a ship in place
+SAILOR = seaman
+DOLPHIN = clever sea mammal
+SEAL = flippered swimmer
+OTTER = playful swimmer
+SALT = what makes the sea taste
+SHELL = beach find

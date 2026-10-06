@@ -6,8 +6,15 @@
 
 const BUILTIN: &[(&str, &str)] = &[
     ("market-garden", include_str!("../themes/market-garden.txt")),
-    ("cosmic-encounter", include_str!("../themes/cosmic-encounter.txt")),
-    ("dayton", include_str!("../themes/dayton.txt")),
+    (
+        "cosmic-encounter",
+        include_str!("../themes/cosmic-encounter.txt"),
+    ),
+    ("kitchen", include_str!("../themes/kitchen.txt")),
+    ("space", include_str!("../themes/space.txt")),
+    ("ocean", include_str!("../themes/ocean.txt")),
+    ("weather", include_str!("../themes/weather.txt")),
+    ("music", include_str!("../themes/music.txt")),
 ];
 
 pub const CODE_VERSION: &str = "1";
@@ -26,15 +33,26 @@ pub struct Theme {
     pub entries: Vec<ThemeEntry>,
     /// Either a built-in name or `~payload`.
     pub code_part: String,
+    /// What the puzzle's random numbers are seeded from: the built-in name,
+    /// or `~` + the normalised word list. Deliberately not the compressed
+    /// payload, so a different compression library version can't change
+    /// which puzzle a theme and seed produce.
+    pub seed_key: String,
 }
 
 pub fn builtin_names() -> Vec<(&'static str, String)> {
-    BUILTIN.iter().map(|(n, t)| (*n, parse(t, "").map(|t| t.title).unwrap_or_default())).collect()
+    BUILTIN
+        .iter()
+        .map(|(n, t)| (*n, parse(t, "").map(|t| t.title).unwrap_or_default()))
+        .collect()
 }
 
 pub fn parse(text: &str, code_part: &str) -> Result<Theme, String> {
     let mut title = String::from("Untitled");
     let mut entries = Vec::new();
+    // Notepad and Windows PowerShell can save UTF-8 with a byte-order mark,
+    // which would otherwise stick to the first line.
+    let text = text.strip_prefix('\u{feff}').unwrap_or(text);
     for (n, raw) in text.lines().enumerate() {
         let line = raw.trim();
         if line.is_empty() {
@@ -55,8 +73,12 @@ pub fn parse(text: &str, code_part: &str) -> Result<Theme, String> {
             return Err(format!("line {}: `{}` needs a definition", n + 1, word));
         }
         let groups: Vec<String> = word
-            .split(|c: char| c == ' ' || c == '-')
-            .map(|g| g.chars().filter(|c| c.is_ascii_alphabetic()).collect::<String>())
+            .split([' ', '-'])
+            .map(|g| {
+                g.chars()
+                    .filter(|c| c.is_ascii_alphabetic())
+                    .collect::<String>()
+            })
             .filter(|g| !g.is_empty())
             .collect();
         let answer: String = groups.concat().to_ascii_uppercase();
@@ -67,14 +89,27 @@ pub fn parse(text: &str, code_part: &str) -> Result<Theme, String> {
         let sep = if word.contains('-') { "-" } else { "," };
         let enumeration = format!(
             "({})",
-            groups.iter().map(|g| g.len().to_string()).collect::<Vec<_>>().join(sep)
+            groups
+                .iter()
+                .map(|g| g.len().to_string())
+                .collect::<Vec<_>>()
+                .join(sep)
         );
-        entries.push(ThemeEntry { answer, enumeration, def: def.to_string() });
+        entries.push(ThemeEntry {
+            answer,
+            enumeration,
+            def: def.to_string(),
+        });
     }
     if entries.is_empty() {
         return Err("theme has no usable words (need 3-7 letters each)".into());
     }
-    Ok(Theme { title, entries, code_part: code_part.to_string() })
+    Ok(Theme {
+        title,
+        entries,
+        code_part: code_part.to_string(),
+        seed_key: code_part.to_string(),
+    })
 }
 
 /// `--theme` accepts a built-in name or a path to a text file.
@@ -82,14 +117,22 @@ pub fn load(name_or_path: &str) -> Result<Theme, String> {
     if let Some((n, t)) = BUILTIN.iter().find(|(n, _)| *n == name_or_path) {
         return parse(t, n);
     }
-    let text = std::fs::read_to_string(name_or_path)
-        .map_err(|e| format!("no built-in theme or readable file called `{name_or_path}`: {e}"))?;
+    let text = std::fs::read_to_string(name_or_path).map_err(|e| {
+        let names: Vec<&str> = BUILTIN.iter().map(|(n, _)| *n).collect();
+        format!(
+            "no built-in theme or readable file called `{name_or_path}` ({e})\n\
+             built-in themes: {}",
+            names.join(", ")
+        )
+    })?;
     // Normalise before encoding so comments/whitespace don't bloat the code.
     let theme = parse(&text, "")?;
     let normal = normalise(&theme);
     let packed = miniz_oxide::deflate::compress_to_vec(normal.as_bytes(), 10);
     let code_part = format!("~{}", b64_encode(&packed));
-    parse(&normal, &code_part)
+    let mut theme = parse(&normal, &code_part)?;
+    theme.seed_key = format!("~{normal}");
+    Ok(theme)
 }
 
 fn normalise(t: &Theme) -> String {
@@ -98,10 +141,14 @@ fn normalise(t: &Theme) -> String {
         // Keep word breaks so the enumeration survives the round trip.
         let mut word = String::new();
         let groups: Vec<usize> = e.enumeration[1..e.enumeration.len() - 1]
-            .split(|c| c == ',' || c == '-')
+            .split([',', '-'])
             .filter_map(|g| g.parse().ok())
             .collect();
-        let sep = if e.enumeration.contains('-') { "-" } else { " " };
+        let sep = if e.enumeration.contains('-') {
+            "-"
+        } else {
+            " "
+        };
         let mut i = 0;
         for (k, g) in groups.iter().enumerate() {
             if k > 0 {
@@ -119,6 +166,11 @@ pub fn share_code(theme: &Theme, seed: &str) -> String {
     format!("{CODE_VERSION}.{}.{seed}", theme.code_part)
 }
 
+/// The string the puzzle's random numbers are seeded from.
+pub fn seed_string(theme: &Theme, seed: &str) -> String {
+    format!("{CODE_VERSION}.{}.{seed}", theme.seed_key)
+}
+
 /// Returns (theme, seed) from a share code.
 pub fn decode(code: &str) -> Result<(Theme, String), String> {
     let mut it = code.trim().splitn(3, '.');
@@ -126,14 +178,22 @@ pub fn decode(code: &str) -> Result<(Theme, String), String> {
         return Err("share codes look like 1.<theme>.<seed>".into());
     };
     if v != CODE_VERSION {
-        return Err(format!("code is from ximenes format v{v}; this build reads v{CODE_VERSION}"));
+        return Err(format!(
+            "code is from ximenes format v{v}; this build reads v{CODE_VERSION}"
+        ));
     }
     let theme = if let Some(payload) = t.strip_prefix('~') {
         let bytes = b64_decode(payload).ok_or("corrupt theme payload in code")?;
-        let raw = miniz_oxide::inflate::decompress_to_vec(&bytes).map_err(|_| "corrupt theme payload in code")?;
-        parse(&String::from_utf8_lossy(&raw), t)?
+        let raw = miniz_oxide::inflate::decompress_to_vec(&bytes)
+            .map_err(|_| "corrupt theme payload in code")?;
+        let mut theme = parse(&String::from_utf8_lossy(&raw), t)?;
+        theme.seed_key = format!("~{}", normalise(&theme));
+        theme
     } else {
-        let (n, text) = BUILTIN.iter().find(|(n, _)| *n == t).ok_or_else(|| format!("unknown built-in theme `{t}` in code"))?;
+        let (n, text) = BUILTIN
+            .iter()
+            .find(|(n, _)| *n == t)
+            .ok_or_else(|| format!("unknown built-in theme `{t}` in code"))?;
         parse(text, n)?
     };
     Ok((theme, seed.to_string()))
@@ -144,7 +204,10 @@ const B64: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012
 fn b64_encode(data: &[u8]) -> String {
     let mut out = String::new();
     for chunk in data.chunks(3) {
-        let n = chunk.iter().enumerate().fold(0u32, |acc, (i, &b)| acc | (b as u32) << (16 - 8 * i));
+        let n = chunk
+            .iter()
+            .enumerate()
+            .fold(0u32, |acc, (i, &b)| acc | (b as u32) << (16 - 8 * i));
         for i in 0..=chunk.len() {
             out.push(B64[(n >> (18 - 6 * i) & 63) as usize] as char);
         }
@@ -153,13 +216,19 @@ fn b64_encode(data: &[u8]) -> String {
 }
 
 fn b64_decode(s: &str) -> Option<Vec<u8>> {
-    let vals: Vec<u32> = s.bytes().map(|c| B64.iter().position(|&b| b == c).map(|p| p as u32)).collect::<Option<_>>()?;
+    let vals: Vec<u32> = s
+        .bytes()
+        .map(|c| B64.iter().position(|&b| b == c).map(|p| p as u32))
+        .collect::<Option<_>>()?;
     let mut out = Vec::new();
     for chunk in vals.chunks(4) {
         if chunk.len() < 2 {
             return None;
         }
-        let n = chunk.iter().enumerate().fold(0u32, |acc, (i, &v)| acc | v << (18 - 6 * i));
+        let n = chunk
+            .iter()
+            .enumerate()
+            .fold(0u32, |acc, (i, &v)| acc | v << (18 - 6 * i));
         for i in 0..chunk.len() - 1 {
             out.push((n >> (16 - 8 * i) & 255) as u8);
         }
@@ -170,6 +239,14 @@ fn b64_decode(s: &str) -> Option<Vec<u8>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn windows_line_endings_and_bom() {
+        let t = parse("\u{feff}# Title\r\nCAT = pet\r\nOWL = night bird\r\n", "").unwrap();
+        assert_eq!(t.title, "Title");
+        assert_eq!(t.entries.len(), 2);
+        assert_eq!(t.entries[1].def, "night bird");
+    }
 
     #[test]
     fn b64_round_trip() {

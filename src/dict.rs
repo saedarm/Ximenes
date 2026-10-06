@@ -53,9 +53,11 @@ pub fn sorted_key(s: &str) -> Vec<u8> {
 impl Dict {
     pub fn load() -> Dict {
         let mut words = Vec::new();
-        for line in WORDS.lines() {
+        for line in WORDS.trim_start_matches('\u{feff}').lines() {
             let mut cols = line.split('\t');
-            let (Some(text), Some(freq)) = (cols.next(), cols.next()) else { continue };
+            let (Some(text), Some(freq)) = (cols.next(), cols.next()) else {
+                continue;
+            };
             let senses = cols
                 .next()
                 .unwrap_or("")
@@ -66,16 +68,27 @@ impl Dict {
                     Some(Sense {
                         lex,
                         direct: raw.iter().map(|d| !d.starts_with(['^', '@'])).collect(),
-                        defs: raw.iter().map(|d| d.trim_start_matches(['^', '@'])).collect(),
+                        defs: raw
+                            .iter()
+                            .map(|d| d.trim_start_matches(['^', '@']))
+                            .collect(),
                     })
                 })
                 .collect();
-            words.push(Word { text, freq: freq.parse::<f32>().unwrap_or(0.0) / 10.0, senses });
+            words.push(Word {
+                text,
+                freq: freq.parse::<f32>().unwrap_or(0.0) / 10.0,
+                senses,
+            });
         }
 
         let mut abbrevs = HashMap::new();
         let mut abbrev_keys = Vec::new();
-        for line in ABBREVS.lines().filter(|l| !l.starts_with('#') && !l.trim().is_empty()) {
+        for line in ABBREVS
+            .trim_start_matches('\u{feff}')
+            .lines()
+            .filter(|l| !l.starts_with('#') && !l.trim().is_empty())
+        {
             if let Some((k, v)) = line.split_once('\t') {
                 abbrevs.insert(k, v.split('|').collect());
                 abbrev_keys.push(k);
@@ -97,7 +110,15 @@ impl Dict {
                 suffixes.entry(&w.text[k..]).or_default().push(i);
             }
         }
-        Dict { words, index, abbrevs, abbrev_keys, anagrams, prefixes, suffixes }
+        Dict {
+            words,
+            index,
+            abbrevs,
+            abbrev_keys,
+            anagrams,
+            prefixes,
+            suffixes,
+        }
     }
 
     pub fn get(&self, s: &str) -> Option<&Word> {
@@ -118,21 +139,26 @@ impl Dict {
         if let Some(a) = self.abbrevs.get(s) {
             defs.extend(a.iter().copied());
         }
-        if let Some(w) = self.get(s) {
-            if w.freq >= 3.0 {
-                for sense in w.senses.iter().take(2) {
-                    if let Some(d) = sense.defs.first() {
-                        if !defs.contains(d) && d.split(' ').count() <= 2 {
-                            defs.push(d);
-                        }
-                    }
+        if let Some(w) = self.get(s)
+            && w.freq >= 3.0
+        {
+            for sense in w.senses.iter().take(2) {
+                if let Some(d) = sense.defs.first()
+                    && !defs.contains(d)
+                    && d.split(' ').count() <= 2
+                {
+                    defs.push(d);
                 }
             }
         }
         if defs.is_empty() {
             return None;
         }
-        Some(Part { letters: s.to_string(), defs, abbrev: s.len() <= 2 })
+        Some(Part {
+            letters: s.to_string(),
+            defs,
+            abbrev: s.len() <= 2,
+        })
     }
 
     pub fn anagrams_of(&self, key: &[u8]) -> &[usize] {
@@ -150,6 +176,6 @@ impl Dict {
     }
 
     pub fn is_surface_word(&self, s: &str) -> bool {
-        self.get(s).map_or(false, |w| w.freq >= SURFACE_FREQ)
+        self.get(s).is_some_and(|w| w.freq >= SURFACE_FREQ)
     }
 }

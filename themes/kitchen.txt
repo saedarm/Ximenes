@@ -1,0 +1,18 @@
+# In the Kitchen
+OVEN = where the roast goes
+STOVE = cooker
+WHISK = beat eggs
+LADLE = soup spoon
+KETTLE = it whistles when it boils
+GRATER = cheese shredder
+TOASTER = bread browner
+SKILLET = frying pan
+KNIFE = cutter
+PLATE = dish
+APRON = cook's cover-up
+SIEVE = strainer
+PANTRY = food cupboard
+SPATULA = flipper
+MIXER = blender
+TIMER = kitchen alarm
+PEELER = potato skinner

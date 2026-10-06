@@ -133,7 +133,12 @@ pub fn slots_of(b: &Blocks) -> Option<Vec<Slot>> {
     let mut reached = 0;
     while let Some((r, c)) = stack.pop() {
         reached += 1;
-        let nbrs = [(r.wrapping_sub(1), c), (r + 1, c), (r, c.wrapping_sub(1)), (r, c + 1)];
+        let nbrs = [
+            (r.wrapping_sub(1), c),
+            (r + 1, c),
+            (r, c.wrapping_sub(1)),
+            (r, c + 1),
+        ];
         for (nr, nc) in nbrs {
             if nr < N && nc < N && white(nr, nc) && !seen[nr][nc] {
                 seen[nr][nc] = true;
@@ -155,8 +160,14 @@ pub fn slots_of(b: &Blocks) -> Option<Vec<Slot>> {
             number += 1;
             last = Some((r, c));
         }
-        let cells = (0..len).map(|k| if across { (r, c + k) } else { (r + k, c) }).collect();
-        slots.push(Slot { number, across, cells });
+        let cells = (0..len)
+            .map(|k| if across { (r, c + k) } else { (r + k, c) })
+            .collect();
+        slots.push(Slot {
+            number,
+            across,
+            cells,
+        });
     }
     Some(slots)
 }
@@ -183,7 +194,11 @@ impl Pool {
                 bits[p][(ch - b'A') as usize][i / 64] |= 1 << (i % 64);
             }
         }
-        Pool { words, bits, blocks }
+        Pool {
+            words,
+            bits,
+            blocks,
+        }
     }
 
     fn matching(&self, pattern: &[u8]) -> Vec<u64> {
@@ -223,11 +238,20 @@ impl Solver<'_> {
     fn fits(&self, si: usize, text: &[u8]) -> bool {
         self.chosen[si].is_none()
             && self.slots[si].cells.len() == text.len()
-            && self.pattern(&self.slots[si]).iter().zip(text).all(|(&p, &t)| p == 0 || p == t)
+            && self
+                .pattern(&self.slots[si])
+                .iter()
+                .zip(text)
+                .all(|(&p, &t)| p == 0 || p == t)
     }
 
     fn place(&mut self, si: usize, wi: usize) -> Vec<(usize, usize)> {
-        let text = self.pools[self.slots[si].cells.len()].as_ref().unwrap().words[wi].text.clone();
+        let text = self.pools[self.slots[si].cells.len()]
+            .as_ref()
+            .unwrap()
+            .words[wi]
+            .text
+            .clone();
         let mut placed = Vec::new();
         for (k, &(r, c)) in self.slots[si].cells.iter().enumerate() {
             if self.letters[r][c] == 0 {
@@ -257,11 +281,13 @@ impl Solver<'_> {
             if count == 0 {
                 return false;
             }
-            if best.as_ref().map_or(true, |(_, c, _)| count < *c) {
+            if best.as_ref().is_none_or(|(_, c, _)| count < *c) {
                 best = Some((i, count, bits));
             }
         }
-        let Some((si, _, bits)) = best else { return true };
+        let Some((si, _, bits)) = best else {
+            return true;
+        };
         let pool = self.pools[self.slots[si].cells.len()].as_ref().unwrap();
 
         for (bi, &block) in bits.iter().enumerate() {
@@ -309,6 +335,7 @@ pub fn fill(
         let slots = slots_of(&blocks).expect("template is valid");
 
         let mut pools: [Option<Pool>; N + 1] = Default::default();
+        #[allow(clippy::needless_range_loop)] // `len` is a word length, not just an index
         for len in 3..=N {
             if !slots.iter().any(|s| s.cells.len() == len) {
                 continue;
@@ -316,14 +343,26 @@ pub fn fill(
             let mut scored: Vec<(f64, Cand)> = Vec::new();
             for (ti, t) in themes.iter().enumerate() {
                 if t.answer.len() == len {
-                    scored.push((100.0 + r.unit(), Cand { text: t.answer.as_bytes().to_vec(), theme: Some(ti) }));
+                    scored.push((
+                        100.0 + r.unit(),
+                        Cand {
+                            text: t.answer.as_bytes().to_vec(),
+                            theme: Some(ti),
+                        },
+                    ));
                 }
             }
             for (_, w) in dict.fill_words() {
                 if w.text.len() == len && !themes.iter().any(|t| t.answer == w.text) {
                     // common words first, with jitter so seeds differ
                     let p = w.freq as f64 + r.unit() * 1.5;
-                    scored.push((p, Cand { text: w.text.as_bytes().to_vec(), theme: None }));
+                    scored.push((
+                        p,
+                        Cand {
+                            text: w.text.as_bytes().to_vec(),
+                            theme: None,
+                        },
+                    ));
                 }
             }
             scored.sort_by(|a, b| b.0.total_cmp(&a.0));
@@ -352,9 +391,15 @@ pub fn fill(
                 break;
             }
             let text = themes[ti].answer.as_bytes();
-            let Some(pool) = pools[text.len()].as_ref() else { continue };
-            let Some(wi) = pool.words.iter().position(|w| w.theme == Some(ti)) else { continue };
-            let open: Vec<usize> = (0..slots.len()).filter(|&si| solver.fits(si, text)).collect();
+            let Some(pool) = pools[text.len()].as_ref() else {
+                continue;
+            };
+            let Some(wi) = pool.words.iter().position(|w| w.theme == Some(ti)) else {
+                continue;
+            };
+            let open: Vec<usize> = (0..slots.len())
+                .filter(|&si| solver.fits(si, text))
+                .collect();
             if open.is_empty() {
                 continue;
             }
@@ -370,7 +415,11 @@ pub fn fill(
             .zip(&solver.chosen)
             .map(|(s, &wi)| {
                 let c = &pools[s.cells.len()].as_ref().unwrap().words[wi.unwrap()];
-                Entry { slot: s.clone(), answer: String::from_utf8(c.text.clone()).unwrap(), theme: c.theme }
+                Entry {
+                    slot: s.clone(),
+                    answer: String::from_utf8(c.text.clone()).unwrap(),
+                    theme: c.theme,
+                }
             })
             .collect();
         let themed = entries.iter().filter(|e| e.theme.is_some()).count() as f64;
@@ -381,13 +430,23 @@ pub fn fill(
             / entries.len() as f64;
         let shorts = entries.iter().filter(|e| e.answer.len() == 3).count() as f64;
         let score = themed * 10.0 + freq - shorts * 0.6;
-        if best.as_ref().map_or(false, |(s, _)| score <= *s) {
+        if best.as_ref().is_some_and(|(s, _)| score <= *s) {
             continue;
         }
-        let bare = entries.iter().filter(|e| e.theme.is_none() && !clueable(&e.answer)).count() as f64;
+        let bare = entries
+            .iter()
+            .filter(|e| e.theme.is_none() && !clueable(&e.answer))
+            .count() as f64;
         let score = score - bare * 15.0;
-        if best.as_ref().map_or(true, |(s, _)| score > *s) {
-            best = Some((score, Fill { blocks, letters: solver.letters, entries }));
+        if best.as_ref().is_none_or(|(s, _)| score > *s) {
+            best = Some((
+                score,
+                Fill {
+                    blocks,
+                    letters: solver.letters,
+                    entries,
+                },
+            ));
         }
     }
     best.map(|(_, f)| f)

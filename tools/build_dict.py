@@ -24,7 +24,7 @@ BAD_DOMAINS = {"vulgarism", "obscenity", "ethnic_slur", "disparagement", "slang"
 BLOCK = set("""
 nazi rape rapist slut whore bitch bastard cunt fuck shit piss crap dick cock prick twat tits
 penis vagina anus anal sex sexy porn nigger negro spic kike chink gook dyke fag faggot queer
-retard homo ki jap wop coon paki gypsy tranny kill suicide
+retard homo gay ki jap wop coon paki gypsy tranny kill suicide
 """.split())
 # Words that may appear in a surface even though WordNet has no entry for them.
 FUNCTION = set("""

@@ -1547,7 +1547,7 @@ BOLUS	26	noun.shape=^ball|^globe;noun.artifact=^tablet|^pill
 BOMB	46	noun.artifact=^arms|^explosive device;noun.event=turkey;verb.competition=^attack;verb.social=fail|flush it
 BOMBARD	27	noun.artifact=^bass;verb.contact=^throw;verb.competition=^attack;verb.communication=^round|^attack
 BOMBED	36	
-BOMBER	39	noun.artifact=^military plane|^plane|^airplane;noun.food=poor boy|hero|sub
+BOMBER	39	noun.artifact=^plane|^military plane|^airplane;noun.food=poor boy|hero|sub
 BOMBERS	38	
 BOMBING	41	noun.act=^attack|^onset;noun.act=^sabotage
 BOMBINGS	35	
@@ -1965,7 +1965,7 @@ BUSTING	34
 BUSTLE	30	noun.act=stir|hustle|fuss;noun.artifact=^framework;verb.motion=hustle
 BUSTY	31	adj.all=stacked
 BUT	66	adv.all=just|only|simply
-BUTANE	26	noun.substance=^gas|^methane series
+BUTANE	26	noun.substance=^gas|^fuel
 BUTCHER	38	noun.person=^merchant;noun.person=^murderer;noun.person=^trained worker|^skilled worker;noun.person=sad sack
 BUTLER	41	
 BUTT	43	noun.artifact=^stock;noun.plant=^portion|^component part;noun.person=goat;noun.body=can|behind|ass
@@ -2398,7 +2398,7 @@ CHEER	41	noun.communication=^approval;noun.attribute=sunshine;verb.emotion=recre
 CHEERFUL	36	
 CHEERING	38	
 CHEERS	41	
-CHEERY	30	adj.all=gay|sunny
+CHEERY	30	adj.all=sunny
 CHEESE	46	noun.food=^food|^solid food|^dairy product;verb.stative=^stop|^cease
 CHEESY	36	adj.all=cheap|punk|bum
 CHEETAH	32	noun.animal=^big cat|^cat
@@ -3098,7 +3098,7 @@ CORRUPT	41	verb.social=^change|^alter|^modify;verb.possession=buy|bribe;verb.con
 CORRUPTED	35	
 CORSAIR	28	noun.person=^pirate;noun.artifact=^pirate|^pirate ship
 CORSET	30	noun.artifact=stays;verb.body=^dress
-CORTEX	36	noun.body=cerebral mantle;noun.body=^animal tissue|^plant tissue;noun.body=^animal tissue
+CORTEX	36	noun.body=cerebral mantle;noun.body=^plant tissue|^animal tissue;noun.body=^animal tissue
 COS	40	noun.relation=^circular function;noun.food=^lettuce
 COSMETIC	37	
 COSMETICS	37	
@@ -5221,7 +5221,7 @@ FESS	27	noun.artifact=^ordinary
 FESTER	28	noun.state=^sore;verb.body=^discharge|^exhaust
 FESTIVAL	47	
 FESTIVALS	39	
-FESTIVE	36	adj.all=gay|merry
+FESTIVE	36	adj.all=merry
 FETAL	34	
 FETCH	36	verb.contact=get|bring|convey;verb.possession=bring|bring in;verb.contact=^take|^bring|^convey
 FETE	27	noun.event=feast;noun.act=festival;verb.social=celebrate
@@ -5363,7 +5363,7 @@ FITTED	41
 FITTER	30	noun.person=^tailor;adj.all=healthier
 FITTING	41	noun.event=accommodation|adjustment;noun.artifact=^supplement|^accessory;noun.artifact=appointment;noun.act=trying on
 FITTINGS	34	
-FIVE	54	noun.quantity=fin;noun.group=basketball team;noun.artifact=^spot
+FIVE	54	noun.quantity=fin;noun.group=basketball team;noun.artifact=^die|^dice
 FIVER	27	noun.possession=^bill|^note|^government note
 FIVES	31	noun.act=^court game
 FIX	48	noun.state=hole|mess|jam;noun.act=repair;noun.act=^immunity|^granting immunity|^exemption;noun.act=location
@@ -5635,7 +5635,7 @@ FOUNDERS	38
 FOUNDING	40	
 FOUNDRY	33	noun.artifact=^manufacturing plant|^factory|^mill
 FOUNTAIN	39	
-FOUR	55	noun.quantity=quartet;noun.artifact=^spot;adj.all=iv
+FOUR	55	noun.quantity=quartet;noun.artifact=^die|^dice;adj.all=iv
 FOURTEEN	39	
 FOURTH	48	noun.relation=^rank;noun.quantity=quarter;noun.communication=^interval|^musical interval
 FOWL	30	noun.animal=poultry;noun.food=bird;verb.competition=^run|^hunt|^hunt down;verb.competition=^run|^hunt|^hunt down
@@ -5888,7 +5888,6 @@ GAUZE	29	noun.artifact=^cotton;noun.artifact=^network|^net|^mesh
 GAVE	52	
 GAVEL	27	noun.artifact=^beetle
 GAWKER	29	noun.person=^witness|^viewer|^spectator
-GAY	49	noun.person=homosexual;adj.all=sunny;adj.all=merry|jolly;adj.all=brave
 GAYS	37	
 GAZE	37	noun.act=regard;verb.perception=stare
 GAZEBO	27	noun.artifact=^building
@@ -7458,7 +7457,7 @@ JOKE	47	noun.communication=laugh|gag;noun.act=^recreation|^diversion;noun.act=tr
 JOKER	37	noun.person=^comic|^comedian;noun.person=turkey;noun.communication=^article|^clause;noun.artifact=^playing card
 JOKES	43	
 JOKING	40	
-JOLLY	36	noun.event=^party;verb.communication=kid|josh;adj.all=gay|merry;adv.all=pretty|somewhat|fairly
+JOLLY	36	noun.event=^party;verb.communication=kid|josh;adj.all=merry;adv.all=pretty|somewhat|fairly
 JOLT	30	noun.event=shock|jar;noun.act=jerk;verb.motion=jar;verb.emotion=^trouble|^upset|^disturb
 JONAH	35	noun.person=^unfortunate|^unfortunate person
 JOSH	44	verb.communication=kid|jolly
@@ -7468,7 +7467,7 @@ JOURNAL	48	noun.communication=diary;noun.possession=^account book;noun.artifact=
 JOURNALS	39	
 JOURNEY	46	noun.act=^travel|^traveling|^travelling;verb.motion=travel;verb.motion=travel
 JOURNEYS	36	
-JOVIAL	27	adj.all=gay|merry|jolly
+JOVIAL	27	adj.all=merry|jolly
 JOY	46	noun.feeling=^emotion;noun.cognition=pleasure|delight;verb.emotion=^feel|^experience;verb.emotion=@make glad or happy
 JOYFUL	34	adj.all=@full of high-spirited delight
 JUBILEE	34	noun.time=^anniversary
@@ -7903,7 +7902,7 @@ LEONE	36
 LEOPARD	36	noun.substance=^fur;noun.animal=^big cat|^cat
 LEPER	28	noun.person=^sick person
 LEPROSY	30	noun.state=^infectious disease
-LESBIAN	42	noun.person=gay woman
+LESBIAN	42	noun.person=^homosexual|^homo
 LESBIANS	36	
 LESION	31	noun.state=^pathology;noun.state=wound
 LESIONS	34	
@@ -8639,7 +8638,7 @@ MERITS	37
 MERLIN	34	noun.animal=pigeon hawk
 MERMAID	35	noun.person=^imaginary being|^imaginary creature
 MERRILY	28	adv.all=happily
-MERRY	38	adj.all=gay|jolly;adj.all=gay|festive;adj.all=alert|lively
+MERRY	38	adj.all=jolly;adj.all=festive;adj.all=alert|lively
 MESA	35	noun.object=table
 MESH	38	noun.quantity=^linear unit|^linear measure;noun.event=engagement;noun.artifact=network|net;noun.act=^catch|^grab|^snatch
 MESS	46	noun.state=^disorder;noun.state=fix|hole|jam;noun.food=^nutrition;noun.food=^meal
@@ -10147,7 +10146,7 @@ PHYSICIST	34
 PHYSICS	44	noun.cognition=natural philosophy;noun.cognition=^natural science
 PIA	31	noun.plant=^herb
 PIANIST	35	noun.person=^player|^musician
-PIANO	43	noun.artifact=^keyboard instrument;noun.attribute=@low loudness;adj.all=soft;adv.all=softly
+PIANO	43	noun.attribute=@low loudness;adj.all=soft;adv.all=softly
 PIAZZA	32	noun.location=place|plaza
 PIC	42	noun.communication=film|movie|flick;noun.artifact=photo|exposure|photograph
 PICCOLO	30	noun.artifact=^flute
@@ -12801,7 +12800,7 @@ SITTER	32	noun.person=@an organism  that sits;noun.person=^keeper;noun.person=^m
 SITTING	49	noun.act=posing;noun.act=^move|^movement|^motion;noun.group=session;noun.communication=^session
 SITUATED	42	
 SITUATION	51	
-SIX	53	noun.quantity=^figure|^digit;noun.artifact=^spot;adj.all=vi|half dozen
+SIX	53	noun.quantity=^figure|^digit;noun.artifact=^die|^dice;adj.all=vi|half dozen
 SIXTEEN	40	
 SIXTH	44	noun.relation=^rank;noun.quantity=^common fraction|^simple fraction;noun.communication=^interval|^musical interval
 SIXTIES	34	noun.time=^decade
@@ -12887,7 +12886,7 @@ SLED	32	noun.artifact=^vehicle;verb.motion=^ride
 SLEDGE	31	noun.artifact=^vehicle;noun.artifact=^hammer;verb.motion=^transport;verb.motion=^travel|^journey
 SLEEK	33	verb.contact=slick;adj.all=@well-groomed and neatly tailored;adj.all=flowing;adj.all=slick
 SLEEP	50	noun.state=^physical condition|^physiological state|^physiological condition;noun.state=^physical condition|^physiological state|^physiological condition;noun.time=nap;noun.state=rest|eternal rest
-SLEEPER	35	noun.person=^terrorist|^spy|^undercover agent;noun.person=^success|^winner;noun.artifact=tie|railroad tie;noun.artifact=^coach|^passenger car|^carriage
+SLEEPER	35	noun.person=^terrorist;noun.person=^success|^winner;noun.artifact=tie|railroad tie;noun.artifact=^coach|^passenger car|^carriage
 SLEEPING	46	
 SLEEPS	37	
 SLEEPY	37	adj.all=@ready to fall asleep
@@ -13811,7 +13810,7 @@ SUNDOWN	30	noun.time=sunset
 SUNDRY	28	adj.all=mixed
 SUNK	37	adj.all=done for|ruined
 SUNLIGHT	39	
-SUNNY	41	adj.all=gay
+SUNNY	41	adj.all=@bright and pleasant
 SUNRISE	38	noun.time=morning|first light|dawn;noun.phenomenon=^atmospheric phenomenon;noun.event=^periodic event
 SUNS	36	
 SUNSET	40	noun.time=^hour;noun.phenomenon=^atmospheric phenomenon;noun.event=^periodic event;adj.all=@providing for termination
@@ -14058,7 +14057,7 @@ TANGIBLE	37
 TANGLE	31	noun.cognition=maze;verb.stative=drag|sweep|drag in;verb.contact=knot;verb.contact=@disarrange or rumple
 TANGLED	35	adj.all=@in a confused mass;adj.all=involved
 TANGO	36	noun.act=^ballroom dancing|^ballroom dance;noun.communication=^dance music;verb.motion=^dance
-TANK	46	noun.artifact=^military vehicle|^tracked vehicle;noun.artifact=^vessel;noun.artifact=^freight car;noun.artifact=cooler
+TANK	46	noun.artifact=^military vehicle|^armored vehicle;noun.artifact=^vessel;noun.artifact=^freight car;noun.artifact=cooler
 TANKER	34	noun.artifact=^cargo ship|^cargo vessel;noun.person=^soldier
 TANKS	43	
 TANNER	36	noun.possession=^coin

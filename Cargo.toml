@@ -1,12 +1,19 @@
 [package]
 name = "ximenes"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
+rust-version = "1.88"
 description = "Builds a themed 7x7 cryptic crossword from a seed, then explains every clue"
+license = "MIT AND CC-BY-SA-4.0"
+repository = "https://github.com/saedarm/ximenes"
+readme = "README.md"
+keywords = ["crossword", "cryptic", "puzzle", "wordplay", "cli"]
+categories = ["command-line-utilities", "games"]
+exclude = ["samples/*.pdf", "samples/*.svg"]
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
-miniz_oxide = "0.9.1"
+miniz_oxide = "0.9"
 
 [profile.release]
 opt-level = 3

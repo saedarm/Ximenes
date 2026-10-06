@@ -1,0 +1,18 @@
+# Weather Report
+RAIN = shower
+SLEET = icy rain
+STORM = tempest
+THUNDER = rumble after lightning
+CLOUD = it may hide the sun
+FOG = mist
+HAIL = icy pellets
+BREEZE = light wind
+TORNADO = twister
+FROST = morning ice
+GALE = strong wind
+SNOW = it falls in flakes
+MONSOON = rainy season
+CLIMATE = weather over time
+SHOWER = brief downpour
+CHILL = cold snap
+MISTY = foggy

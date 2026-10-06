@@ -1,0 +1,14 @@
+# Game Night
+DICE = they're rolled
+CARDS = deck
+TOKEN = game piece
+BOARD = playing surface
+SCORE = tally
+CHESS = game of kings
+POKER = card game with bluffing
+RULES = what the box insert explains
+TURN = go
+WINNER = champion
+SNACK = something to munch
+TABLE = where the game is set up
+LOSER = runner-up, unkindly

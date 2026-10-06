@@ -1,0 +1,15 @@
+# Two Words Each (multi-word answers)
+HOT DOG = ballpark snack
+TOP HAT = tall topper
+ICE AGE = big freeze
+RED-EYE = overnight flight
+PIT STOP = racing break
+BUS STOP = where riders wait
+SUN HAT = beach wear
+POP STAR = chart topper
+OLD HAT = out of date
+TEA CUP = brew holder
+SEA DOG = old sailor
+CAR PARK = lot
+AIR BAG = car safety cushion
+HOME RUN = ball out of the park

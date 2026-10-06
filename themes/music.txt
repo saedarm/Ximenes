@@ -1,0 +1,18 @@
+# Music
+PIANO = keyboard instrument
+CELLO = big fiddle
+DRUM = beat keeper
+TEMPO = speed of a piece
+CHORD = notes played together
+OPERA = sung drama
+TENOR = high male voice
+BANJO = twangy strummer
+GUITAR = six-string
+ORGAN = church instrument
+LYRIC = words of a song
+NOTE = musical symbol
+SONATA = piece for a soloist
+CHOIR = singers
+RHYTHM = beat
+TUNE = melody
+STRING = guitar part
